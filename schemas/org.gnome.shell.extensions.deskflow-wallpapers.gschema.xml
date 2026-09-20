@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.deskflow-wallpapers" path="/org/gnome/shell/extensions/deskflow-wallpapers/">
+    
+    <key name="workspace-count" type="i">
+      <default>1</default>
+      <summary>Detected Workspace Count</summary>
+      <description>The number of active workspaces currently detected by the extension.</description>
+    </key>
+    
+    <key name="wallpapers-map" type="s">
+      <default>"{}"</default>
+      <summary>Wallpapers Map</summary>
+      <description>A JSON string storing the wallpaper URI assigned to each workspace index.</description>
+    </key>
+
+    <key name="default-wallpaper" type="s">
+      <default>""</default>
+      <summary>Default Wallpaper</summary>
+      <description>Fallback wallpaper URI to use if no custom wallpaper is set for a workspace.</description>
+    </key>
+
+    <key name="show-indicator" type="b">
+      <default>true</default>
+      <summary>Show Panel Indicator</summary>
+      <description>Whether to show the quick settings indicator in the top panel.</description>
+    </key>
+
+    <key name="switch-delay" type="i">
+      <default>100</default>
+      <summary>Switch Delay (ms)</summary>
+      <description>Debounce delay in milliseconds before switching the wallpaper, to prevent flickering during rapid workspace switching.</description>
+    </key>
+
+  </schema>
+</schemalist>
