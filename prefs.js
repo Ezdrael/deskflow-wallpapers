@@ -22,8 +22,18 @@ export default class DeskflowWallpapersPreferences extends ExtensionPreferences 
         this._workspaceRows = [];
         this._updateWorkspacesList();
         
-        this._settings.connect('changed::workspace-count', () => {
+        this._settingsChangedId = this._settings.connect('changed::workspace-count', () => {
             this._updateWorkspacesList();
+        });
+        
+        window.connect('close-request', () => {
+            if (this._settings && this._settingsChangedId) {
+                this._settings.disconnect(this._settingsChangedId);
+                this._settingsChangedId = null;
+            }
+            this._settings = null;
+            this._workspacesGroup = null;
+            this._workspaceRows = null;
         });
         
         const extraGroup = new Adw.PreferencesGroup({
