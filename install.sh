@@ -15,7 +15,7 @@ echo "Копіювання файлів..."
 cp metadata.json "$TARGET_DIR/"
 cp extension.js "$TARGET_DIR/"
 cp prefs.js "$TARGET_DIR/"
-cp stylesheet.css "$TARGET_DIR/"
+
 cp -r schemas "$TARGET_DIR/"
 
 echo "Увімкнення розширення..."

@@ -1,8 +1,0 @@
-/* stylesheet.css for Deskflow Wallpapers */
-
-.deskflow-indicator-icon {
-    /* Optional specific styling for the top panel indicator icon */
-}
-
-/* In preferences, Adw.ActionRow with preview requires custom sizing if using custom widgets,
-   but we can rely mostly on Adwaita CSS in prefs.js */

@@ -22,17 +22,12 @@ export default class DeskflowWallpapersExtension extends Extension {
         const ext = this;
         const workspaceManager = global.workspace_manager;
         
-        this._nWorkspacesSignal = workspaceManager.connect('notify::n-workspaces', () => {
-            this._onWorkspacesCountChanged();
-        });
-        
-        this._activeWorkspaceSignal = workspaceManager.connect('active-workspace-changed', () => {
-            this._onActiveWorkspaceChanged();
-        });
-        
-        this._workspacesReorderedSignal = workspaceManager.connect('workspaces-reordered', () => {
-            this._onWorkspacesCountChanged();
-        });
+        workspaceManager.connectObject(
+            'notify::n-workspaces', () => this._onWorkspacesCountChanged(),
+            'active-workspace-changed', () => this._onActiveWorkspaceChanged(),
+            'workspaces-reordered', () => this._onWorkspacesCountChanged(),
+            this
+        );
         
         this._onWorkspacesCountChanged();
         
@@ -72,26 +67,19 @@ export default class DeskflowWallpapersExtension extends Extension {
         };
 
         this._indicator = null;
-        this._showIndicatorSignal = this._settings.connect('changed::show-indicator', () => {
-            this._updateIndicatorVisibility();
-        });
+        this._settings.connectObject(
+            'changed::show-indicator', () => this._updateIndicatorVisibility(),
+            'changed::wallpapers-map', () => this._refreshAllBackgrounds(),
+            this
+        );
         this._updateIndicatorVisibility();
-        
-        this._settingsChangedSignal = this._settings.connect('changed::wallpapers-map', () => {
-            this._refreshAllBackgrounds();
-        });
 
         this._onActiveWorkspaceChanged();
     }
     
     disable() {
-        const workspaceManager = global.workspace_manager;
-        workspaceManager.disconnect(this._nWorkspacesSignal);
-        workspaceManager.disconnect(this._activeWorkspaceSignal);
-        workspaceManager.disconnect(this._workspacesReorderedSignal);
-        
-        this._settings.disconnect(this._showIndicatorSignal);
-        this._settings.disconnect(this._settingsChangedSignal);
+        global.workspace_manager.disconnectObject(this);
+        this._settings.disconnectObject(this);
         
         if (this._indicator) {
             this._indicator.destroy();
