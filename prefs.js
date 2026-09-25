@@ -9,13 +9,13 @@ export default class DeskflowWallpapersPreferences extends ExtensionPreferences 
         this._settings = this.getSettings();
         
         window.set_default_size(700, 600);
-        window.set_title("Налаштування Deskflow Wallpapers");
+        window.set_title("Deskflow Wallpapers Settings");
         
         const page = new Adw.PreferencesPage();
         
         this._workspacesGroup = new Adw.PreferencesGroup({
-            title: 'Робочі столи',
-            description: 'Встановіть індивідуальні шпалери для кожного з виявлених робочих просторів.'
+            title: 'Workspaces',
+            description: 'Set individual wallpapers for each detected workspace.'
         });
         page.add(this._workspacesGroup);
         
@@ -37,20 +37,20 @@ export default class DeskflowWallpapersPreferences extends ExtensionPreferences 
         });
         
         const extraGroup = new Adw.PreferencesGroup({
-            title: 'Додатково'
+            title: 'Advanced'
         });
         page.add(extraGroup);
         
         const indicatorRow = new Adw.SwitchRow({
-            title: 'Значок на панелі',
-            subtitle: 'Показувати меню швидкого доступу у верхній панелі GNOME'
+            title: 'Panel Indicator',
+            subtitle: 'Show quick access menu in the GNOME top panel'
         });
         this._settings.bind('show-indicator', indicatorRow, 'active', Gio.SettingsBindFlags.DEFAULT);
         extraGroup.add(indicatorRow);
         
         const delayRow = new Adw.SpinRow({
-            title: 'Затримка перемикання (мс)',
-            subtitle: 'Час очікування перед зміною шпалер (запобігає мерехтінню при швидкому гортанні)',
+            title: 'Switch Delay (ms)',
+            subtitle: 'Wait time before changing wallpaper (prevents flickering during rapid switching)',
             adjustment: new Gtk.Adjustment({ lower: 0, upper: 2000, step_increment: 50 })
         });
         this._settings.bind('switch-delay', delayRow, 'value', Gio.SettingsBindFlags.DEFAULT);
@@ -72,14 +72,14 @@ export default class DeskflowWallpapersPreferences extends ExtensionPreferences 
         
         for (let i = 0; i < count; i++) {
             const row = new Adw.ActionRow({
-                title: `Робочий стіл ${i + 1}`,
-                subtitle: map[i] ? map[i].replace('file://', '') : 'За замовчуванням'
+                title: `Workspace ${i + 1}`,
+                subtitle: map[i] ? map[i].replace('file://', '') : 'Default'
             });
             
             const pickBtn = new Gtk.Button({
                 icon_name: 'document-open-symbolic',
                 valign: Gtk.Align.CENTER,
-                tooltip_text: 'Вибрати шпалери',
+                tooltip_text: 'Select Wallpaper',
                 css_classes: ['flat']
             });
             pickBtn.connect('clicked', () => this._chooseWallpaper(i, row));
@@ -88,7 +88,7 @@ export default class DeskflowWallpapersPreferences extends ExtensionPreferences 
             const clearBtn = new Gtk.Button({
                 icon_name: 'edit-clear-symbolic',
                 valign: Gtk.Align.CENTER,
-                tooltip_text: 'Скинути шпалери',
+                tooltip_text: 'Reset Wallpaper',
                 css_classes: ['flat']
             });
             clearBtn.connect('clicked', () => {
@@ -97,7 +97,7 @@ export default class DeskflowWallpapersPreferences extends ExtensionPreferences 
                 try { currentMap = JSON.parse(currentMapStr); } catch(e) {}
                 delete currentMap[i];
                 this._settings.set_string('wallpapers-map', JSON.stringify(currentMap));
-                row.set_subtitle('За замовчуванням');
+                row.set_subtitle('Default');
             });
             row.add_suffix(clearBtn);
             
@@ -108,11 +108,11 @@ export default class DeskflowWallpapersPreferences extends ExtensionPreferences 
     
     _chooseWallpaper(index, row) {
         const dialog = new Gtk.FileDialog({
-            title: `Вибрати шпалери для Робочого столу ${index + 1}`
+            title: `Select wallpaper for Workspace ${index + 1}`
         });
         
         const filter = new Gtk.FileFilter();
-        filter.set_name('Зображення');
+        filter.set_name('Images');
         filter.add_mime_type('image/png');
         filter.add_mime_type('image/jpeg');
         filter.add_mime_type('image/webp');
@@ -138,7 +138,7 @@ export default class DeskflowWallpapersPreferences extends ExtensionPreferences 
                     row.set_subtitle(uri.replace('file://', ''));
                 }
             } catch (e) {
-                // Скасовано або сталася помилка
+                // Cancelled or an error occurred
             }
         });
     }

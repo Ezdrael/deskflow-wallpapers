@@ -54,7 +54,7 @@ export default class DeskflowWallpapersExtension extends Extension {
                         });
                         this._background.add_child(overlay);
                         
-                        // Збережемо посилання, щоб оновлювати при зміні
+                        // Save reference to update on change
                         if (!ext._workspaceOverlays) ext._workspaceOverlays = [];
                         ext._workspaceOverlays.push({
                             widget: overlay,
@@ -146,13 +146,13 @@ export default class DeskflowWallpapersExtension extends Extension {
         return this._bgSettings.get_enum('picture-options');
     }
 
-    // Оновлює всі поточні фони, якщо користувач змінив їх у налаштуваннях
+    // Refresh all current backgrounds if the user changed them in settings
     _refreshAllBackgrounds() {
         const workspaceManager = global.workspace_manager;
         const activeIndex = workspaceManager.get_active_workspace_index();
         this._onActiveWorkspaceChanged();
         
-        // Оновлюємо мініатюри в Overview
+        // Update thumbnails in Overview
         if (this._workspaceOverlays) {
             for (let overlayObj of this._workspaceOverlays) {
                 let uri = this._getUri(overlayObj.wsIndex);
@@ -182,7 +182,7 @@ export default class DeskflowWallpapersExtension extends Extension {
             if (file.query_exists(null)) {
                 const style = this._bgStyle();
                 
-                // Оновлюємо актори фону Layout Manager напряму, щоб уникнути 'bg-changed' події
+                // Update Layout Manager background actors directly to avoid 'bg-changed' event
                 if (Main.layoutManager._bgManagers) {
                     for (const bgManager of Main.layoutManager._bgManagers) {
                         if (bgManager.backgroundActor && bgManager.backgroundActor.content) {
@@ -192,7 +192,7 @@ export default class DeskflowWallpapersExtension extends Extension {
                     }
                 }
                 
-                // Оновлення GSettings
+                // Update GSettings
                 this._writeGSettings(uri);
             }
         }
@@ -237,13 +237,13 @@ export default class DeskflowWallpapersExtension extends Extension {
         const activeIndex = workspaceManager.get_active_workspace_index();
         const count = workspaceManager.get_n_workspaces();
         
-        const header = new PopupMenu.PopupMenuItem(`Робочий стіл ${activeIndex + 1} із ${count}`, { reactive: false });
+        const header = new PopupMenu.PopupMenuItem(`Workspace ${activeIndex + 1} of ${count}`, { reactive: false });
         header.label.add_style_class_name('bold');
         this._indicator.menu.addMenuItem(header);
         
         this._indicator.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
         
-        const settingsItem = new PopupMenu.PopupMenuItem('Налаштування шпалер...');
+        const settingsItem = new PopupMenu.PopupMenuItem('Wallpaper Settings...');
         settingsItem.connect('activate', () => {
             this.openPreferences();
         });

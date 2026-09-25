@@ -1,7 +1,7 @@
 {
   "uuid": "deskflow-wallpapers@maximilyan",
   "name": "Deskflow Wallpapers",
-  "description": "Автоматична зміна шпалер для кожного робочого простору. Individual wallpapers for each workspace.",
+  "description": "Individual wallpapers for each workspace.",
   "shell-version": [
     "46",
     "47",
